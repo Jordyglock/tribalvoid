@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+<defs>
+<path id="b" d="M200 200 C214 150 248 128 262 70 C268 110 290 128 276 168 C300 150 318 120 312 84 C346 130 322 190 262 214 Z"/>
+<path id="s" d="M200 200 C206 172 222 160 228 128 C240 154 236 176 214 204 Z"/>
+</defs>
+<g fill="#e9e7e2">
+<use href="#b"/>
+<use href="#b" transform="rotate(90 200 200)"/>
+<use href="#b" transform="rotate(180 200 200)"/>
+<use href="#b" transform="rotate(270 200 200)"/>
+<g opacity=".55">
+<use href="#s" transform="rotate(45 200 200)"/>
+<use href="#s" transform="rotate(135 200 200)"/>
+<use href="#s" transform="rotate(225 200 200)"/>
+<use href="#s" transform="rotate(315 200 200)"/>
+</g>
+</g>
+<path d="M200 176 L224 200 L200 224 L176 200 Z" fill="#000"/>
+<path d="M200 188 L212 200 L200 212 L188 200 Z" fill="#e9e7e2"/>
+</svg>
