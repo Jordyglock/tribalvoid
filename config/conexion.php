@@ -1,7 +1,12 @@
 <?php
 // ====== CONFIGURACIÓN (cambia estos valores) ======
 define('MARCA', 'TRIBAL VOID');      // Nombre de la marca de tu amigo
-define('BASE', '/tribalvoid/');      // Carpeta del proyecto en htdocs
+$directorioScript = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? '/'));
+$directorioScript = rtrim($directorioScript, '/.');
+if (basename($directorioScript) === 'admin') {
+    $directorioScript = dirname($directorioScript);
+}
+define('BASE', rtrim($directorioScript, '/') . '/');
 $DB_HOST = 'localhost';
 $DB_NAME = 'marca_dark';
 $DB_USER = 'root';
@@ -41,8 +46,23 @@ function restaurarInventarioPedido(PDO $pdo, int $pedidoId) {
 }
 function imgProducto($img) {
     if (!$img) return BASE . 'assets/img/emblema.svg';
-    $ruta = strpos($img, '/') === false ? 'productos/' . $img : $img;
-    return BASE . 'assets/img/' . str_replace('%2F', '/', rawurlencode($ruta));
+    $ruta = str_replace('\\', '/', trim((string)$img));
+    $marcaAssets = 'assets/img/';
+    $posicionAssets = stripos($ruta, $marcaAssets);
+    if ($posicionAssets !== false) {
+        $ruta = substr($ruta, $posicionAssets + strlen($marcaAssets));
+    } elseif (preg_match('/^(?:[a-z]:\/|\/)/i', $ruta)) {
+        return BASE . 'assets/img/emblema.svg';
+    } elseif (strpos($ruta, '/') === false) {
+        $ruta = 'productos/' . $ruta;
+    }
+
+    $segmentos = explode('/', $ruta);
+    if (in_array('..', $segmentos, true) || in_array('.', $segmentos, true)) {
+        return BASE . 'assets/img/emblema.svg';
+    }
+    $ruta = implode('/', array_map('rawurlencode', $segmentos));
+    return BASE . 'assets/img/' . $ruta;
 }
 function tarjeta($p) { ?>
     <a class="card" href="<?= BASE ?>producto.php?id=<?= (int)$p['id'] ?>">

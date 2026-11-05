@@ -25,8 +25,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (!in_array($ext, ['jpg', 'jpeg', 'png', 'webp']) || $_FILES['imagen']['size'] > 3 * 1024 * 1024) {
             $error = 'La imagen debe ser JPG, PNG o WEBP y pesar menos de 3 MB.';
         } else {
-            $imagen = uniqid('p_') . '.' . $ext;
-            move_uploaded_file($_FILES['imagen']['tmp_name'], __DIR__ . '/../assets/img/productos/' . $imagen);
+            $directorioImagenes = __DIR__ . '/../assets/img/productos';
+            if (!is_dir($directorioImagenes) && !mkdir($directorioImagenes, 0755, true)) {
+                $error = 'No se pudo crear la carpeta de imágenes del proyecto.';
+            } else {
+                $imagen = uniqid('p_') . '.' . $ext;
+                if (!move_uploaded_file($_FILES['imagen']['tmp_name'], $directorioImagenes . '/' . $imagen)) {
+                    $error = 'No se pudo guardar la imagen. Verifica los permisos de la carpeta de imágenes.';
+                }
+            }
         }
     }
     if (!$error) {
